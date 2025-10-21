@@ -1,0 +1,20 @@
+<script setup lang="ts"></script>
+
+<template>
+  <ion-page>
+    <ion-tabs>
+      <ion-router-outlet />
+      <ion-tab-bar id="footer" slot="bottom">
+        <ion-tab-button tab="home" href="/tabs/tab1">
+          <ion-icon :icon="ioniconsHome"></ion-icon>
+        </ion-tab-button>
+        <ion-tab-button tab="qr-code" href="/tabs/tab2">
+          <ion-icon :icon="ioniconsKeypad"></ion-icon>
+        </ion-tab-button>
+        <ion-tab-button tab="transactions" href="/tabs/tab3">
+          <ion-icon :icon="ioniconsList"></ion-icon>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-page>
+</template>

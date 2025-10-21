@@ -1,0 +1,7 @@
+{
+  "name": "solana-yatori-nuxt-ionic-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
