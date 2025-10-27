@@ -6,7 +6,11 @@
       ><ion-toolbar><ion-title>tab 1</ion-title></ion-toolbar></ion-header
     >
     <ion-content>
-      <div class="container"></div>
+      <div class="container">
+        <ion-button @click="useConnectToSolflare"
+          >Connect to Solflare</ion-button
+        >
+      </div>
     </ion-content>
   </ion-page>
 </template>
