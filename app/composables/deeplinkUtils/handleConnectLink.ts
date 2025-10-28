@@ -5,13 +5,13 @@ import { useDappKeyPair } from "./useDappKeyPair"
 
 
 export function handleConnectLink(event: any) {
+
     if (!event.url) {
-        alert("Error: handleConnectLink ---> no event.url")
+        alert("dev-error: handleConnectLink ---> no event.url")
         return
     }
 
     if (event.url) {
-
         const url = new URL(event.url)
         const params = url.searchParams
 
@@ -26,8 +26,6 @@ export function handleConnectLink(event: any) {
 
 
         if (/onConnectSolflare/.test(url.pathname)) {
-
-
             const sharedSecretDapp = nacl.box.before(
                 bs58.decode(params.get("solflare_encryption_public_key")!),
                 useDappKeyPair.value.secretKey
@@ -39,7 +37,7 @@ export function handleConnectLink(event: any) {
                 sharedSecretDapp
             )
 
-            alert(connectData)
+            alert(connectData.toString())
 
 
         }
