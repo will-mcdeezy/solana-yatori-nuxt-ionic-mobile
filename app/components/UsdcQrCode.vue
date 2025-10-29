@@ -10,6 +10,10 @@ const props = defineProps<{
 const usdcQrRef = ref<HTMLElement | null>(null);
 
 onMounted(() => {
+  // !important - The Yatori template only has logic for non create token account transactions
+  // To detect if a "include_rent" transaction is needed, check if the associated token account has the minimum sol balance, and if it does not, change "include_rent" to true
+  // If "include_rent" is true, then payer logic aka device that scan qr code will need to use ARROW-API Create Token Account + transfer with memo endpoint
+  // For demo purposes, this template only works with receiving addresses that have a current token (USDC) balance or sol rent has already been deposited to the associated token account to activate it
   const qrCodeData = {
     to_address: useSolflareSession.value.connectedAddress,
     amount: props.amount,
