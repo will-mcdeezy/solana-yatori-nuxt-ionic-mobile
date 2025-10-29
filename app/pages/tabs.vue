@@ -11,8 +11,8 @@
         <ion-tab-button tab="qr-code" href="/tabs/tab2">
           <ion-icon :icon="ioniconsKeypad"></ion-icon>
         </ion-tab-button>
-        <ion-tab-button tab="transactions" href="/tabs/tab3">
-          <ion-icon :icon="ioniconsList"></ion-icon>
+        <ion-tab-button tab="Scan" href="/tabs/tab3">
+          <ion-icon :icon="ioniconsCamera"></ion-icon>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

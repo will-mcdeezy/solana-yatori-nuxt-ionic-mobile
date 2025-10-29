@@ -8,8 +8,11 @@
     >
     <ion-content>
       <div class="container">
-        <div><ion-text>Place holder for transaction list</ion-text></div>
+        <div><ion-text>Scan</ion-text></div>
+        <div></div>
+        <div><ion-button>Scan a QR code</ion-button></div>
       </div>
     </ion-content>
+    <!-- MODAL TO GO HERE -->
   </ion-page>
 </template>
