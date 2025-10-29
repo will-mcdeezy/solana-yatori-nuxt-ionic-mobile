@@ -125,7 +125,7 @@ const presentQrCodeModal = () => {
   ></ion-toast>
   <ion-toast
     ref="noAmountToastRef"
-    position-anchor="headerAnchor"
+    position-anchor="tabTwoHeader"
     position="top"
     swipe-gesture="vertical"
     message="Enter amount before creating QR-CODE"

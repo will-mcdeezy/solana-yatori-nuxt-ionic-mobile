@@ -3,6 +3,7 @@ import bs58 from 'bs58'
 import { useDecryptPayload } from "./useDecryptPayload"
 import { useDappKeyPair } from "./useDappKeyPair"
 import { useSolflareSession } from "./useSolflareSession"
+import { deeplinkConnectSuccessful } from "../toastRefs/useToast"
 
 export function handleConnectLink(event: any) {
     if (!event.url) {
@@ -40,8 +41,8 @@ export function handleConnectLink(event: any) {
             useSolflareSession.value.session = connectData.session
             useSolflareSession.value.connectedAddress = connectData.public_key
             useSolflareSession.value.isConnected = true
-            alert('You are now connected to Solflare!')
-            // TOAST NOTIFICATION???
+            deeplinkConnectSuccessful.value.$el.present()
+
         }
     }
 

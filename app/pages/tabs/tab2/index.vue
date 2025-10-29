@@ -4,7 +4,7 @@ import NumberPad from "~/components/NumberPad.vue";
 
 <template>
   <ion-page>
-    <ion-header id="headerAnchor"
+    <ion-header id="tabTwoHeader"
       ><ion-toolbar><ion-title>tab 2</ion-title></ion-toolbar></ion-header
     >
     <ion-content>

@@ -4,6 +4,7 @@ import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSessi
 
 const props = defineProps<{
   amount: string;
+  currentYid: string;
 }>();
 
 const usdcQrRef = ref<HTMLElement | null>(null);
@@ -14,6 +15,7 @@ onMounted(() => {
     amount: props.amount,
     token_mint_address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
     include_rent: false,
+    yid: props.currentYid,
   };
 
   const qr = new QRCodeStyling({

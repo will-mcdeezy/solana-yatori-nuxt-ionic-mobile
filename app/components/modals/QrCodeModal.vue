@@ -2,26 +2,51 @@
 import { formatWalletAddress } from "~/composables/blockchainUtils.ts/useBlockchainUtils";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { qrCodeModalRef } from "~/composables/modalRefs/useModal";
+import {
+  listeningToWs,
+  setUpUsdcWebSocket,
+  wsUSDC,
+} from "~/composables/websockets/useUsdcWebSocket";
 
 const props = defineProps<{
   amount: string;
 }>();
 
+const currentYid = ref("");
+
 const openYatoriTelegram = () => {
   navigateTo("https://t.me/+s4NedO5tmS0yM2Rh", { external: true });
+};
+
+const generateYid = () => {
+  const timestamp = Date.now().toString().slice(-4);
+  const random = Math.random().toString(36).substring(2, 6);
+  return `${timestamp}${random}`;
+};
+
+const qrModalWillPresent = () => {
+  currentYid.value = generateYid();
+  setUpUsdcWebSocket(currentYid.value);
 };
 
 const dismissQrModal = () => {
   qrCodeModalRef.value.$el.dismiss();
 };
 
-//     @ionModalDidDismiss="() => ()"
-//     @ionModalWillDismiss="() => ()"
-//     @ionModalWillPresent="() => ()"
+const qrModalDidDismiss = () => {
+  currentYid.value = "";
+  wsUSDC?.close();
+  listeningToWs.value = "closed";
+};
 </script>
 
 <template>
-  <ion-modal ref="qrCodeModalRef" class="">
+  <ion-modal
+    ref="qrCodeModalRef"
+    class=""
+    @ionModalWillPresent="() => qrModalWillPresent()"
+    @ionModalDidDismiss="() => qrModalDidDismiss()"
+  >
     <ion-header class="">
       <ion-toolbar class="">
         <ion-title class="inter-semi-bold">Scan QR</ion-title>
@@ -40,7 +65,13 @@ const dismissQrModal = () => {
             formatWalletAddress(useSolflareSession.connectedAddress)
           }}</ion-text
         >
-        <UsdcQrCode class="qrCode" :amount="props.amount" />
+        <UsdcQrCode
+          v-if="listeningToWs === 'open'"
+          class="qrCode"
+          :amount="props.amount"
+          :currentYid="currentYid"
+        />
+        <ion-spinner class="spinner" v-if="listeningToWs !== 'open'" />
         <div class="questions-wrapper">
           <ion-text>Questions?👇 </ion-text
           ><ion-button @click="openYatoriTelegram"
@@ -48,18 +79,17 @@ const dismissQrModal = () => {
           </ion-button>
         </div>
       </div>
-      <div class="">
-        <!-- <ion-spinner
-          v-if="listeningToWs !== 'open'"
-          class="w-12 h-12 my-auto"
-        /> -->
-      </div>
+      <div class=""></div>
     </ion-content>
   </ion-modal>
 </template>
 
 <style lang="css" scoped>
 .qrCode {
+  margin: auto;
+}
+
+.spinner {
   margin: auto;
 }
 
