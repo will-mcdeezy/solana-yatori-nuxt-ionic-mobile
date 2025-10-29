@@ -7,7 +7,9 @@
       ><ion-toolbar><ion-title>tab 3</ion-title></ion-toolbar></ion-header
     >
     <ion-content>
-      <div class="container"></div>
+      <div class="container">
+        <div><ion-text>Place holder for transaction list</ion-text></div>
+      </div>
     </ion-content>
   </ion-page>
 </template>

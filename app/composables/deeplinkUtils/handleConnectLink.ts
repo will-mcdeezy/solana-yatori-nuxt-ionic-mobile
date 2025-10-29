@@ -2,15 +2,13 @@ import nacl from "tweetnacl"
 import bs58 from 'bs58'
 import { useDecryptPayload } from "./useDecryptPayload"
 import { useDappKeyPair } from "./useDappKeyPair"
-
+import { useSolflareSession } from "./useSolflareSession"
 
 export function handleConnectLink(event: any) {
-
     if (!event.url) {
         alert("dev-error: handleConnectLink ---> no event.url")
         return
     }
-
     if (event.url) {
         const url = new URL(event.url)
         const params = url.searchParams
@@ -24,10 +22,12 @@ export function handleConnectLink(event: any) {
             return
         }
 
-
         if (/onConnectSolflare/.test(url.pathname)) {
+
+            const deeplinkPubKey = params.get("solflare_encryption_public_key")!
+
             const sharedSecretDapp = nacl.box.before(
-                bs58.decode(params.get("solflare_encryption_public_key")!),
+                bs58.decode(deeplinkPubKey!),
                 useDappKeyPair.value.secretKey
             );
 
@@ -36,10 +36,12 @@ export function handleConnectLink(event: any) {
                 params.get("nonce")!,
                 sharedSecretDapp
             )
-
-            alert(connectData.toString())
-
-
+            useSolflareSession.value.deeplinkPubkey = deeplinkPubKey
+            useSolflareSession.value.session = connectData.session
+            useSolflareSession.value.connectedAddress = connectData.public_key
+            useSolflareSession.value.isConnected = true
+            alert('You are now connected to Solflare!')
+            // TOAST NOTIFICATION???
         }
     }
 
