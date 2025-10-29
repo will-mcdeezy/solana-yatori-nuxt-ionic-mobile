@@ -70,6 +70,7 @@ const qrModalDidDismiss = () => {
           class="qrCode"
           :amount="props.amount"
           :currentYid="currentYid"
+          :include_rent="false"
         />
         <ion-spinner class="spinner" v-if="listeningToWs !== 'open'" />
         <div class="questions-wrapper">

@@ -5,6 +5,7 @@ import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSessi
 const props = defineProps<{
   amount: string;
   currentYid: string;
+  include_rent: boolean; // always false for demo, assumes USDC account already has rent for normal token transfer with memo transactions
 }>();
 
 const usdcQrRef = ref<HTMLElement | null>(null);
@@ -18,7 +19,7 @@ onMounted(() => {
     to_address: useSolflareSession.value.connectedAddress,
     amount: props.amount,
     token_mint_address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-    include_rent: false,
+    include_rent: props.include_rent,
     yid: props.currentYid,
   };
 
