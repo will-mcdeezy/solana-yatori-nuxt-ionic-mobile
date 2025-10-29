@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import QrCodeModal from "~/components/modals/QrCodeModal.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <ion-page>
@@ -18,6 +16,5 @@ import QrCodeModal from "~/components/modals/QrCodeModal.vue";
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-    <QrCodeModal />
   </ion-page>
 </template>

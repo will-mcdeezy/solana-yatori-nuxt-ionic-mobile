@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { qrCodeModalRef } from "~/composables/modalRefs/useModal";
-import { noAmountToastRef } from "~/composables/toastRefs/useToast";
+import {
+  connectToSolflareToastRef,
+  noAmountToastRef,
+} from "~/composables/toastRefs/useToast";
+import QrCodeModal from "./modals/QrCodeModal.vue";
+import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 
 const amount = ref<string>("0");
 
@@ -70,10 +75,18 @@ const isValidInput = (input: string) => {
 };
 
 const presentQrCodeModal = () => {
+  // first check solflare
+  if (!useSolflareSession.value.isConnected) {
+    connectToSolflareToastRef.value.$el.present();
+    return;
+  }
+
+  // then check amount
   if (amount.value === "0") {
     noAmountToastRef.value.$el.present();
     return;
   }
+
   qrCodeModalRef.value.$el.present();
 };
 </script>
@@ -103,6 +116,14 @@ const presentQrCodeModal = () => {
   </div>
   <ion-button @click="presentQrCodeModal">Create QR code</ion-button>
   <ion-toast
+    ref="connectToSolflareToastRef"
+    position-anchor="headerAnchor"
+    position="top"
+    swipe-gesture="vertical"
+    message="Connect to Solflare before proceeding!"
+    :duration="5000"
+  ></ion-toast>
+  <ion-toast
     ref="noAmountToastRef"
     position-anchor="headerAnchor"
     position="top"
@@ -110,6 +131,7 @@ const presentQrCodeModal = () => {
     message="Enter amount before creating QR-CODE"
     :duration="5000"
   ></ion-toast>
+  <QrCodeModal :amount="amount" />
 </template>
 
 <style lang="css" scoped>
