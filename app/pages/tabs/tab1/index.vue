@@ -2,6 +2,7 @@
 import { getTokenAccount } from "~/composables/blockchainHttpsRequests/getTokenAccount";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { deeplinkConnectSuccessfulToastRef } from "~/composables/toastRefs/useToast";
+import { useConnectToSolflare } from "~/composables/deeplinkUtils/useConnectToSolflare";
 
 const getUsdcAddress = async () => {
   useSolflareSession.value.usdcAddress = await getTokenAccount(

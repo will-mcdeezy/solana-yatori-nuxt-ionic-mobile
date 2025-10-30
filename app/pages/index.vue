@@ -17,13 +17,19 @@
           >
         </div>
         <ion-button
-          class="bottom-button"
+          class="continue-button"
           @click="() => navigateTo('/tabs/tab1')"
           >Continue</ion-button
         >
       </div>
     </ion-content>
+    <!-- Invisible footer that reserves tab bar space -->
   </ion-page>
 </template>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+/* For ion-button shadow parts css check out https://ionicframework.com/docs/api/button#css-shadow-parts */
+.continue-button {
+  margin-bottom: 40px;
+}
+</style>

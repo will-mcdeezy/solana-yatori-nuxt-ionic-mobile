@@ -18,9 +18,8 @@ const openCameraScanModal = () => {
       <div class="container">
         <div><ion-text>Scan</ion-text></div>
         <div></div>
-        <div>
-          <ion-button @click="openCameraScanModal">Scan a QR code</ion-button>
-        </div>
+
+        <ion-button @click="openCameraScanModal">Scan a QR code</ion-button>
       </div>
     </ion-content>
     <CameraScanModal />

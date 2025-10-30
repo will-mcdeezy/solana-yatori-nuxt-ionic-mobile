@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { formatWalletAddress } from "~/composables/blockchainUtils.ts/useBlockchainUtils";
+import { formatWalletAddress } from "~/composables/blockchainUtils/useBlockchainUtils";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { qrCodeModalRef } from "~/composables/modalRefs/useModal";
 import {
   listeningToWs,
   setUpUsdcWebSocket,
+  signatureWithYidConfirmed,
   wsUSDC,
 } from "~/composables/websockets/useUsdcWebSocket";
 
@@ -37,6 +38,7 @@ const qrModalDidDismiss = () => {
   currentYid.value = "";
   wsUSDC?.close();
   listeningToWs.value = "closed";
+  signatureWithYidConfirmed.value = false;
 };
 </script>
 
@@ -66,16 +68,22 @@ const qrModalDidDismiss = () => {
           }}</ion-text
         >
         <UsdcQrCode
-          v-if="listeningToWs === 'open'"
+          v-if="listeningToWs === 'open' && !signatureWithYidConfirmed"
           class="qrCode"
           :amount="props.amount"
           :currentYid="currentYid"
           :include_rent="false"
         />
-        <ion-spinner class="spinner" v-if="listeningToWs !== 'open'" />
+        <ion-spinner
+          class="spinner"
+          v-if="listeningToWs !== 'open' || signatureWithYidConfirmed"
+        />
+        <ion-text v-if="signatureWithYidConfirmed" color="success"
+          >CONFIRMED!</ion-text
+        >
         <div class="questions-wrapper">
           <ion-text>Questions?👇 </ion-text
-          ><ion-button @click="openYatoriTelegram"
+          ><ion-button class="" @click="openYatoriTelegram"
             >Join the Yatori Telegram Chat
           </ion-button>
         </div>
@@ -97,8 +105,8 @@ const qrModalDidDismiss = () => {
 .questions-wrapper {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
   text-align: center;
+  margin-bottom: 40px;
   gap: 1rem;
 }
 </style>

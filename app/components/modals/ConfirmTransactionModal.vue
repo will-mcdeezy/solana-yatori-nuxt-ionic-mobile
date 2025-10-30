@@ -3,7 +3,7 @@ import bs58 from "bs58";
 import { Transaction } from "@solana/web3.js";
 
 import { getMemoTokenTransferData } from "~/composables/arrowApi/getMemoTokenTransferData";
-import { formatWalletAddress } from "~/composables/blockchainUtils.ts/useBlockchainUtils";
+import { formatWalletAddress } from "~/composables/blockchainUtils/useBlockchainUtils";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { confirmTransactionModalRef } from "~/composables/modalRefs/useModal";
 import { scannedQrData } from "~/composables/useProcessQrCode";
@@ -107,7 +107,12 @@ const prepareAndSendTx = async () => {
   >
     <ion-header class="">
       <ion-toolbar class="">
-        <ion-title class="inter-semi-bold">Confirm Payment</ion-title>
+        <ion-title class="inter-semi-bold" v-if="!useProcessingTx.latestSig"
+          >Confirm Payment</ion-title
+        >
+        <ion-title class="inter-semi-bold" v-if="useProcessingTx.latestSig"
+          >Payment Sent</ion-title
+        >
         <ion-buttons class="">
           <ion-button
             @click="() => dismissConfirmTransactionModal()"
@@ -121,12 +126,33 @@ const prepareAndSendTx = async () => {
     </ion-header>
     <ion-content class="ion-padding"
       ><div class="container">
-        <ion-text class=""
-          >Confirm to pay ${{ txData!.amount }} to
-          {{ formatWalletAddress(txData!.to_address) }}
-        </ion-text>
-
+        <div>
+          <a
+            v-if="useProcessingTx.latestSig"
+            :href="`https://explorer.solana.com/tx/${useProcessingTx.latestSig}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color: #4c8ef7; text-decoration: underline"
+          >
+            View Transaction on Solana Explorer
+          </a>
+        </div>
         <div class="spinner-wrapper">
+          <ion-text
+            class=""
+            v-if="
+              !useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
+            "
+            >Confirm to pay ${{ txData!.amount }} to
+            {{ formatWalletAddress(txData!.to_address) }}
+          </ion-text>
+          <ion-button
+            v-if="
+              !useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
+            "
+            @click="() => prepareAndSendTx()"
+            >Confirm Payment in Solflare
+          </ion-button>
           <ion-spinner
             class="spinner"
             v-if="
@@ -141,15 +167,11 @@ const prepareAndSendTx = async () => {
           >
 
           <ion-text v-if="useProcessingTx.latestSig">
-            {{ useProcessingTx.latestSig }} Time to start your logic for
-            confirming transaction signature based on processed, confirmed, or
-            finalized</ion-text
+            {{ useProcessingTx.latestSig }} <br /><br /><br />
+            🔥 Time to start your logic for confirming transaction signature
+            based on processed, confirmed, or finalized</ion-text
           >
         </div>
-
-        <ion-button @click="() => prepareAndSendTx()"
-          >Confirm Payment in Solflare
-        </ion-button>
       </div>
       <div class=""></div>
     </ion-content>
@@ -158,6 +180,8 @@ const prepareAndSendTx = async () => {
 
 <style lang="css" scoped>
 .spinner-wraper {
+  display: flex;
+  flex-direction: column;
   margin: auto;
   gap: 1rem;
 }

@@ -77,7 +77,7 @@ export function setUpUsdcWebSocket(currentYid: string) {
             const memoLog = logMessages.find(
                 (log: string) =>
                     log.startsWith("Program log: Memo") &&
-                    log.includes("Yatori|") &&
+                    log.includes("arrow-api|") &&
                     log.includes(`yid:${currentYid}`)
             );
 

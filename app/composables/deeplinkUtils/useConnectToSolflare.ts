@@ -1,7 +1,7 @@
 import bs58 from "bs58";
 import { App } from "@capacitor/app";
-import { handleDeepLink } from "./deeplinkUtils/handleDeepLink";
-import { useDappKeyPair } from "./deeplinkUtils/useDappKeyPair";
+import { handleDeepLink } from "../deeplinkUtils/handleDeepLink";
+import { useDappKeyPair } from "../deeplinkUtils/useDappKeyPair";
 
 
 export const useConnectToSolflare = async () => {

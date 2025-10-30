@@ -6,10 +6,6 @@
   height: 100%;
 }
 
-.bottom-button {
-  margin-bottom: 16px;
-}
-
 .questions-wrapper {
   display: flex;
   flex-direction: column;
