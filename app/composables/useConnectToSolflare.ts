@@ -1,6 +1,6 @@
 import bs58 from "bs58";
 import { App } from "@capacitor/app";
-import { handleConnectLink } from "./deeplinkUtils/handleConnectLink";
+import { handleDeepLink } from "./deeplinkUtils/handleDeepLink";
 import { useDappKeyPair } from "./deeplinkUtils/useDappKeyPair";
 
 
@@ -14,5 +14,5 @@ export const useConnectToSolflare = async () => {
     });
     const solflareUrl = `https://solflare.com/ul/v1/connect?${String(params)}`;
     await navigateTo(solflareUrl, { external: true })
-    App.addListener('appUrlOpen', handleConnectLink)
+    App.addListener('appUrlOpen', handleDeepLink)
 }

@@ -3,11 +3,12 @@ import bs58 from 'bs58'
 import { useDecryptPayload } from "./useDecryptPayload"
 import { useDappKeyPair } from "./useDappKeyPair"
 import { useSolflareSession } from "./useSolflareSession"
-import { deeplinkConnectSuccessful } from "../toastRefs/useToast"
+import { deeplinkConnectSuccessfulToastRef } from "../toastRefs/useToast"
+import { useProcessingTx } from "./useProcessingTx"
 
-export function handleConnectLink(event: any) {
+export function handleDeepLink(event: any) {
     if (!event.url) {
-        alert("dev-error: handleConnectLink ---> no event.url")
+        alert("dev-error: handleDeepLink ---> no event.url")
         return
     }
     if (event.url) {
@@ -32,6 +33,7 @@ export function handleConnectLink(event: any) {
                 useDappKeyPair.value.secretKey
             );
 
+
             const connectData = useDecryptPayload(
                 params.get("data")!,
                 params.get("nonce")!,
@@ -41,10 +43,27 @@ export function handleConnectLink(event: any) {
             useSolflareSession.value.session = connectData.session
             useSolflareSession.value.connectedAddress = connectData.public_key
             useSolflareSession.value.isConnected = true
-            deeplinkConnectSuccessful.value.$el.present()
+            deeplinkConnectSuccessfulToastRef.value.$el.present()
+
+        }
+
+        if (/signAndSendUsdc/.test(url.pathname)) {
+            useProcessingTx.value.waitingOnSolfalre = false
+
+            const sharedSecretDapp = nacl.box.before(
+                bs58.decode(useSolflareSession.value.deeplinkPubkey!),
+                useDappKeyPair.value.secretKey
+            );
+
+            const signAndSendTransactionData = useDecryptPayload(
+                params.get("data")!,
+                params.get("nonce")!,
+                sharedSecretDapp
+            );
+
+            const { signature } = signAndSendTransactionData
+            useProcessingTx.value.latestSig = signature as string
 
         }
     }
-
-
 }

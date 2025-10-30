@@ -1,9 +1,17 @@
 <script lang="ts" setup>
+import bs58 from "bs58";
+import { Transaction } from "@solana/web3.js";
+
 import { getMemoTokenTransferData } from "~/composables/arrowApi/getMemoTokenTransferData";
 import { formatWalletAddress } from "~/composables/blockchainUtils.ts/useBlockchainUtils";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { confirmTransactionModalRef } from "~/composables/modalRefs/useModal";
 import { scannedQrData } from "~/composables/useProcessQrCode";
+import { useDappKeyPair } from "~/composables/deeplinkUtils/useDappKeyPair";
+import nacl from "tweetnacl";
+import { useEncryptPayload } from "~/composables/deeplinkUtils/useEncryptPayload";
+import { getRecentBlockhash } from "~/composables/blockchainHttpsRequests/getBlockhash";
+import { useProcessingTx } from "~/composables/deeplinkUtils/useProcessingTx";
 
 interface QrCodeData {
   to_address: string;
@@ -15,10 +23,6 @@ interface QrCodeData {
 
 const txData = ref<QrCodeData | null>();
 
-const waitingOnSolflare = ref(false);
-
-const waitingOnConfirmed = ref(false);
-
 const confirmTransactionModalWillPresent = () => {
   txData.value = JSON.parse(scannedQrData.value);
 };
@@ -28,10 +32,12 @@ const dismissConfirmTransactionModal = () => {
 };
 
 const confirmTransactionModalDidDismiss = () => {
-  waitingOnSolflare.value = false;
-  waitingOnConfirmed.value = false;
+  // Clean up
   scannedQrData.value = false;
   txData.value = null;
+  useProcessingTx.value.waitingOnSolfalre;
+  useProcessingTx.value.waitingOnSigConfirmation;
+  useProcessingTx.value.latestSig = null;
 };
 
 // ARROW API -- See docs 👉 https://yatori.io/docs/token-transfer-memo
@@ -47,7 +53,47 @@ const prepareAndSendTx = async () => {
       txData.value!.yid!
     );
 
-    alert(transaction);
+    const deserializedTx = Transaction.from(transaction);
+
+    deserializedTx.recentBlockhash = await getRecentBlockhash("mainnet-beta");
+
+    const serializedTransaction = deserializedTx.serialize({
+      requireAllSignatures: false,
+    });
+
+    const payload = {
+      session: useSolflareSession.value.session,
+      // @ts-ignore
+      transaction: bs58.encode(serializedTransaction),
+    };
+
+    const sharedSecret = nacl.box.before(
+      bs58.decode(useSolflareSession.value.deeplinkPubkey!),
+      useDappKeyPair.value.secretKey
+    );
+
+    const encryptedResult = useEncryptPayload(payload, sharedSecret);
+    if (!encryptedResult) {
+      throw new Error(
+        "Error: encrypted result not returned. Check useEncryptPayload"
+      );
+    }
+
+    const params = new URLSearchParams({
+      dapp_encryption_public_key: bs58.encode(useDappKeyPair.value.publicKey),
+      cluster: "mainnet-beta",
+      nonce: bs58.encode(encryptedResult.nonce),
+      redirect_link: "solana-yatori-nuxt-ionic-mobile:///signAndSendUsdc",
+      payload: bs58.encode(encryptedResult.encryptedPayload),
+    });
+
+    const solflareUrl = `https://solflare.com/ul/v1/signAndSendTransaction?${String(
+      params
+    )}`;
+
+    useProcessingTx.value.waitingOnSolfalre = true;
+
+    return navigateTo(solflareUrl, { external: true });
   }
 };
 </script>
@@ -80,11 +126,25 @@ const prepareAndSendTx = async () => {
           {{ formatWalletAddress(txData!.to_address) }}
         </ion-text>
 
-        <div class="">
+        <div class="spinner-wrapper">
           <ion-spinner
             class="spinner"
-            v-if="waitingOnSolflare || waitingOnConfirmed"
+            v-if="
+              useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
+            "
           />
+          <ion-text
+            v-if="
+              useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
+            "
+            >Confirm inside Solflare</ion-text
+          >
+
+          <ion-text v-if="useProcessingTx.latestSig">
+            {{ useProcessingTx.latestSig }} Time to start your logic for
+            confirming transaction signature based on processed, confirmed, or
+            finalized</ion-text
+          >
         </div>
 
         <ion-button @click="() => prepareAndSendTx()"
@@ -97,7 +157,8 @@ const prepareAndSendTx = async () => {
 </template>
 
 <style lang="css" scoped>
-.spinner {
+.spinner-wraper {
   margin: auto;
+  gap: 1rem;
 }
 </style>

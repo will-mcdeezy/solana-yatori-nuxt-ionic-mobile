@@ -2,4 +2,4 @@ export const noAmountToastRef = ref();
 
 export const connectToSolflareToastRef = ref()
 
-export const deeplinkConnectSuccessful = ref()
+export const deeplinkConnectSuccessfulToastRef = ref()

@@ -8,12 +8,15 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "add-ios": "bunx cap add ios",
+    "add-droid": "bunx cap add android",
     "sync-ios": "bunx cap sync ios",
     "sync-droid": "bunx cap sync android",
     "ios": "bunx cap run ios",
     "droid": "bunx cap run android"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.4",
     "@capacitor/app": "7.1.0",
     "@capacitor/core": "7.4.3",
     "@capacitor/haptics": "7.0.2",
@@ -21,6 +24,7 @@
     "@capacitor/keyboard": "7.0.3",
     "@capacitor/status-bar": "7.0.3",
     "@nuxtjs/ionic": "^1.0.2",
+    "@solana/web3.js": "^1.98.4",
     "@zxing/browser": "^0.1.5",
     "bs58": "^6.0.0",
     "nuxt": "^4.1.3",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getTokenAccount } from "~/composables/blockchainHttpsRequests/getTokenAccount";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
-import { deeplinkConnectSuccessful } from "~/composables/toastRefs/useToast";
+import { deeplinkConnectSuccessfulToastRef } from "~/composables/toastRefs/useToast";
 
 const getUsdcAddress = async () => {
   useSolflareSession.value.usdcAddress = await getTokenAccount(
@@ -53,7 +53,7 @@ const getUsdcAddress = async () => {
       </div>
     </ion-content>
     <ion-toast
-      ref="deeplinkConnectSuccessful"
+      ref="deeplinkConnectSuccessfulToastRef"
       position-anchor="tabOneHeader"
       position="top"
       swipe-gesture="vertical"
