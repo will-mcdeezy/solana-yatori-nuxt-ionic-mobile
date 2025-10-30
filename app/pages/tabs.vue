@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {
-  connectToSolflareToastRef,
   noAmountToastRef,
+  connectToSolflareToastRef,
+  connectBeforeScanningToastRef,
 } from "~/composables/toastRefs/useToast";
 </script>
 
@@ -35,6 +36,14 @@ import {
       position="top"
       swipe-gesture="vertical"
       message="Enter amount before creating QR-CODE"
+      :duration="5000"
+    ></ion-toast>
+    <ion-toast
+      ref="connectBeforeScanningToastRef"
+      position-anchor="tabThreeHeader"
+      position="top"
+      swipe-gesture="vertical"
+      message="Connect to Solflare before scanning!"
       :duration="5000"
     ></ion-toast>
   </ion-page>

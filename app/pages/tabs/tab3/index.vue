@@ -3,11 +3,11 @@ import CameraScanModal from "~/components/modals/CameraScanModal.vue";
 import ConfirmTransactionModal from "~/components/modals/ConfirmTransactionModal.vue";
 import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { cameraScanModalRef } from "~/composables/modalRefs/useModal";
-import { connectToSolflareToastRef } from "~/composables/toastRefs/useToast";
+import { connectBeforeScanningToastRef } from "~/composables/toastRefs/useToast";
 
 const openCameraScanModal = () => {
   if (!useSolflareSession.value.isConnected) {
-    connectToSolflareToastRef.value.$el.present();
+    connectBeforeScanningToastRef.value.$el.present();
   } else {
     cameraScanModalRef.value.$el.present();
   }
@@ -16,8 +16,7 @@ const openCameraScanModal = () => {
 
 <template>
   <ion-page>
-    <ion-router-outlet />
-    <ion-header
+    <ion-header id="tabThreeHeader"
       ><ion-toolbar><ion-title>tab 3</ion-title></ion-toolbar></ion-header
     >
     <ion-content>
