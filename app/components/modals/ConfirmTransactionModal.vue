@@ -136,6 +136,8 @@ const prepareAndSendTx = async () => {
           >
             View Transaction on Solana Explorer
           </a>
+        </div>
+        <div class="spinner-wrapper">
           <ion-text
             class=""
             v-if="
@@ -144,15 +146,6 @@ const prepareAndSendTx = async () => {
             >Confirm to pay ${{ txData!.amount }} to
             {{ formatWalletAddress(txData!.to_address) }}
           </ion-text>
-        </div>
-        <div class="spinner-wrapper">
-          <ion-button
-            v-if="
-              !useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
-            "
-            @click="() => prepareAndSendTx()"
-            >Confirm Payment in Solflare
-          </ion-button>
           <ion-spinner
             class="spinner"
             v-if="
@@ -172,7 +165,15 @@ const prepareAndSendTx = async () => {
             based on processed, confirmed, or finalized</ion-text
           >
         </div>
-        <div></div>
+        <div class="button-wrapper">
+          <ion-button
+            v-if="
+              !useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
+            "
+            @click="() => prepareAndSendTx()"
+            >Confirm Payment in Solflare
+          </ion-button>
+        </div>
       </div>
     </ion-content>
   </ion-modal>
@@ -184,5 +185,16 @@ const prepareAndSendTx = async () => {
   flex-direction: column;
   margin: auto;
   gap: 1rem;
+}
+
+.button-wrapper {
+  display: flex;
+  width: 100%;
+  margin-bottom: 48px;
+}
+
+.button-wrapper ion-button {
+  flex: 1; /* fill the row */
+  width: 100%; /* belt & suspenders */
 }
 </style>
