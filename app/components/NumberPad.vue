@@ -115,22 +115,7 @@ const presentQrCodeModal = () => {
     </ion-button>
   </div>
   <ion-button @click="presentQrCodeModal">Create QR code</ion-button>
-  <ion-toast
-    ref="connectToSolflareToastRef"
-    position-anchor="headerAnchor"
-    position="top"
-    swipe-gesture="vertical"
-    message="Connect to Solflare before proceeding!"
-    :duration="5000"
-  ></ion-toast>
-  <ion-toast
-    ref="noAmountToastRef"
-    position-anchor="tabTwoHeader"
-    position="top"
-    swipe-gesture="vertical"
-    message="Enter amount before creating QR-CODE"
-    :duration="5000"
-  ></ion-toast>
+
   <QrCodeModal :amount="amount" />
 </template>
 
