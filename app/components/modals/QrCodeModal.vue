@@ -76,7 +76,7 @@ const qrModalDidDismiss = () => {
         />
         <ion-spinner
           class="spinner"
-          v-if="listeningToWs !== 'open' || signatureWithYidConfirmed"
+          v-if="listeningToWs !== 'open' && !signatureWithYidConfirmed"
         />
         <ion-text v-if="signatureWithYidConfirmed" color="success"
           >CONFIRMED!</ion-text

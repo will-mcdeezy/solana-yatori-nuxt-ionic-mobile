@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import CameraScanModal from "~/components/modals/CameraScanModal.vue";
 import ConfirmTransactionModal from "~/components/modals/ConfirmTransactionModal.vue";
+import { useSolflareSession } from "~/composables/deeplinkUtils/useSolflareSession";
 import { cameraScanModalRef } from "~/composables/modalRefs/useModal";
+import { connectToSolflareToastRef } from "~/composables/toastRefs/useToast";
 
 const openCameraScanModal = () => {
-  cameraScanModalRef.value.$el.present();
+  if (!useSolflareSession.value.isConnected) {
+    connectToSolflareToastRef.value.$el.present();
+  } else {
+    cameraScanModalRef.value.$el.present();
+  }
 };
 </script>
 

@@ -30,6 +30,6 @@
 <style lang="css" scoped>
 /* For ion-button shadow parts css check out https://ionicframework.com/docs/api/button#css-shadow-parts */
 .continue-button {
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 </style>

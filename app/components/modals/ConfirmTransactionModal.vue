@@ -136,8 +136,6 @@ const prepareAndSendTx = async () => {
           >
             View Transaction on Solana Explorer
           </a>
-        </div>
-        <div class="spinner-wrapper">
           <ion-text
             class=""
             v-if="
@@ -146,6 +144,8 @@ const prepareAndSendTx = async () => {
             >Confirm to pay ${{ txData!.amount }} to
             {{ formatWalletAddress(txData!.to_address) }}
           </ion-text>
+        </div>
+        <div class="spinner-wrapper">
           <ion-button
             v-if="
               !useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
@@ -172,8 +172,8 @@ const prepareAndSendTx = async () => {
             based on processed, confirmed, or finalized</ion-text
           >
         </div>
+        <div></div>
       </div>
-      <div class=""></div>
     </ion-content>
   </ion-modal>
 </template>
