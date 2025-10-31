@@ -73,7 +73,7 @@ export function setUpUsdcWebSocket(currentYid: string) {
         if (parsedData.method === "logsNotification") {
             const logMessages = parsedData.params.result.value.logs;
 
-            // 🔍 NEW: Dynamically search for the memo log that contains both "Yatori|" and the currentYid
+            // 🔍 NEW: Dynamically search for the memo log that contains both "arrow-api|" and the currentYid
             const memoLog = logMessages.find(
                 (log: string) =>
                     log.startsWith("Program log: Memo") &&
