@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {
+  noAmountToastRef,
+  connectToSolflareToastRef,
+  connectBeforeScanningToastRef,
+} from "~/composables/toastRefs/useToast";
+</script>
 
 <template>
   <ion-page>
@@ -11,10 +17,34 @@
         <ion-tab-button tab="qr-code" href="/tabs/tab2">
           <ion-icon :icon="ioniconsKeypad"></ion-icon>
         </ion-tab-button>
-        <ion-tab-button tab="transactions" href="/tabs/tab3">
-          <ion-icon :icon="ioniconsList"></ion-icon>
+        <ion-tab-button tab="Scan" href="/tabs/tab3">
+          <ion-icon :icon="ioniconsCamera"></ion-icon>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
+    <ion-toast
+      ref="connectToSolflareToastRef"
+      position-anchor="tabTwoHeader"
+      position="top"
+      swipe-gesture="vertical"
+      message="Connect to Solflare before proceeding!"
+      :duration="5000"
+    ></ion-toast>
+    <ion-toast
+      ref="noAmountToastRef"
+      position-anchor="tabTwoHeader"
+      position="top"
+      swipe-gesture="vertical"
+      message="Enter amount before creating QR-CODE"
+      :duration="5000"
+    ></ion-toast>
+    <ion-toast
+      ref="connectBeforeScanningToastRef"
+      position-anchor="tabThreeHeader"
+      position="top"
+      swipe-gesture="vertical"
+      message="Connect to Solflare before scanning!"
+      :duration="5000"
+    ></ion-toast>
   </ion-page>
 </template>
