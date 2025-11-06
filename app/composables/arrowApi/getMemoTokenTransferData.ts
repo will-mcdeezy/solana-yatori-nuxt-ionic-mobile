@@ -1,7 +1,8 @@
 export const getMemoTokenTransferData = async (from: string, to: string, mintAddress: string, amount: string, yid: string) => {
     const config = useRuntimeConfig();
-    // TODO: ERROR HANDLING
-    const response: any = await $fetch(`https://kouba.io/memo-token-transfer`, {
+
+    // 🔥 GET YOUR YATORI ARROW API KEY HERE --> https://dashboard.yatori.io/signup
+    const response: any = await $fetch(`https://arrow-api.yatori.io/v1/token-transfer-memo`, {
         method: 'POST',
         body: {
             from_address: from,
@@ -15,5 +16,6 @@ export const getMemoTokenTransferData = async (from: string, to: string, mintAdd
             'x-api-key': config.public.ARROW_API_KEY
         },
     })
+    // TODO: ERROR HANDLING
     return response.data
 }

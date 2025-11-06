@@ -1,7 +1,8 @@
 export const getTokenAccount = async (owner: string, mintAddress: string) => {
     const config = useRuntimeConfig();
-    // TODO: ERROR HANDLING
-    const response: any = await $fetch(`https://kouba.io/get-token-account`, {
+
+    // 🔥 GET YOUR YATORI ARROW API KEY HERE --> https://dashboard.yatori.io/signup
+    const response: any = await $fetch(`https://arrow-api.yatori.io/v1/get-token-account`, {
         method: 'POST',
         body: {
             owner_address: owner,
@@ -12,5 +13,6 @@ export const getTokenAccount = async (owner: string, mintAddress: string) => {
             'x-api-key': config.public.ARROW_API_KEY
         },
     })
+    // TODO: ERROR HANDLING
     return response.data as string
 }
