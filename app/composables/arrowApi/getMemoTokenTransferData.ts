@@ -13,7 +13,7 @@ export const getMemoTokenTransferData = async (from: string, to: string, mintAdd
         },
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': config.public.ARROW_API_KEY
+            Authorization: `Bearer ${config.public.ARROW_API_KEY}`,
         },
     })
     // TODO: ERROR HANDLING
