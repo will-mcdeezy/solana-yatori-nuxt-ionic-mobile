@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import bs58 from "bs58";
-import { Transaction } from "@solana/web3.js";
 
 import { getMemoTokenTransferData } from "~/composables/arrowApi/getMemoTokenTransferData";
 import { formatWalletAddress } from "~/composables/blockchainUtils/useBlockchainUtils";
@@ -12,6 +11,7 @@ import nacl from "tweetnacl";
 import { useEncryptPayload } from "~/composables/deeplinkUtils/useEncryptPayload";
 import { getRecentBlockhash } from "~/composables/blockchainHttpsRequests/getBlockhash";
 import { useProcessingTx } from "~/composables/deeplinkUtils/useProcessingTx";
+import { getMemoTokenTransferDataWithHash } from "~/composables/arrowApi/getMemoTokenTransferWithHashData";
 
 interface QrCodeData {
   to_address: string;
@@ -41,11 +41,69 @@ const confirmTransactionModalDidDismiss = () => {
 };
 
 // ARROW API -- See docs 👉 https://yatori.io/docs/token-transfer-memo
-const prepareAndSendTx = async () => {
+// If using non-blockhash included transaction - need to import Transaction from solana/web3.js
+// const prepareAndSendTx = async () => {
+//   let transaction;
+//   let baseAmount = Number(txData.value?.amount) * 1000000;
+//   if (!txData.value?.include_rent) {
+//     transaction = await getMemoTokenTransferData(
+//       useSolflareSession.value.connectedAddress,
+//       txData.value!.to_address,
+//       txData.value!.token_mint_address,
+//       baseAmount.toFixed(),
+//       txData.value!.yid!
+//     );
+
+//     const deserializedTx = Transaction.from(transaction);
+
+//     deserializedTx.recentBlockhash = await getRecentBlockhash("mainnet-beta");
+
+//     const serializedTransaction = deserializedTx.serialize({
+//       requireAllSignatures: false,
+//     });
+
+//     const payload = {
+//       session: useSolflareSession.value.session,
+//       // @ts-ignore
+//       transaction: bs58.encode(serializedTransaction),
+//     };
+
+//     const sharedSecret = nacl.box.before(
+//       bs58.decode(useSolflareSession.value.deeplinkPubkey!),
+//       useDappKeyPair.value.secretKey
+//     );
+
+//     const encryptedResult = useEncryptPayload(payload, sharedSecret);
+//     if (!encryptedResult) {
+//       throw new Error(
+//         "Error: encrypted result not returned. Check useEncryptPayload"
+//       );
+//     }
+
+//     const params = new URLSearchParams({
+//       dapp_encryption_public_key: bs58.encode(useDappKeyPair.value.publicKey),
+//       cluster: "mainnet-beta",
+//       nonce: bs58.encode(encryptedResult.nonce),
+//       redirect_link: "solana-yatori-nuxt-ionic-mobile:///signAndSendUsdc",
+//       payload: bs58.encode(encryptedResult.encryptedPayload),
+//     });
+
+//     const solflareUrl = `https://solflare.com/ul/v1/signAndSendTransaction?${String(
+//       params
+//     )}`;
+
+//     useProcessingTx.value.waitingOnSolfalre = true;
+
+//     return navigateTo(solflareUrl, { external: true });
+//   }
+// };
+
+// ARROW API -- See docs 👉 https://yatori.io/docs/token-transfer-memo-hash
+const prepareAndSendHashInlcudedTX = async () => {
   let transaction;
   let baseAmount = Number(txData.value?.amount) * 1000000;
   if (!txData.value?.include_rent) {
-    transaction = await getMemoTokenTransferData(
+    transaction = await getMemoTokenTransferDataWithHash(
       useSolflareSession.value.connectedAddress,
       txData.value!.to_address,
       txData.value!.token_mint_address,
@@ -53,18 +111,10 @@ const prepareAndSendTx = async () => {
       txData.value!.yid!
     );
 
-    const deserializedTx = Transaction.from(transaction);
-
-    deserializedTx.recentBlockhash = await getRecentBlockhash("mainnet-beta");
-
-    const serializedTransaction = deserializedTx.serialize({
-      requireAllSignatures: false,
-    });
-
     const payload = {
       session: useSolflareSession.value.session,
       // @ts-ignore
-      transaction: bs58.encode(serializedTransaction),
+      transaction: bs58.encode(transaction),
     };
 
     const sharedSecret = nacl.box.before(
@@ -170,7 +220,7 @@ const prepareAndSendTx = async () => {
             v-if="
               !useProcessingTx.waitingOnSolfalre && !useProcessingTx.latestSig
             "
-            @click="() => prepareAndSendTx()"
+            @click="() => prepareAndSendHashInlcudedTX()"
             >Confirm Payment in Solflare
           </ion-button>
         </div>
